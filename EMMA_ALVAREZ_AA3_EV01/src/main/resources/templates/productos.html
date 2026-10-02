@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario</title>
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+<header>
+    <h1>Sistema de Inventario</h1>
+    <p>Gestión de productos para pequeñas tiendas</p>
+</header>
+
+<main class="contenedor">
+    <div class="mensaje" th:if="${param.mensaje}" th:text="${param.mensaje}"></div>
+
+    <div class="barra">
+        <form th:action="@{/productos}" method="get">
+            <input type="text" name="buscar" th:value="${buscar}"
+                   placeholder="Buscar producto por nombre">
+            <button type="submit">Buscar</button>
+        </form>
+        <a class="boton" th:href="@{/productos/nuevo}">+ Nuevo producto</a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="producto : ${productos}">
+            <td th:text="${producto.id}"></td>
+            <td th:text="${producto.nombre}"></td>
+            <td th:text="${producto.categoria}"></td>
+            <td th:text="${producto.cantidad}"></td>
+            <td th:text="${#numbers.formatDecimal(producto.precio, 0, 'COMMA', 0, 'POINT')}"></td>
+            <td>
+                <a th:href="@{/productos/editar/{id}(id=${producto.id})}">Editar</a>
+                |
+                <a th:href="@{/productos/eliminar/{id}(id=${producto.id})}"
+                   onclick="return confirm('¿Desea eliminar este producto?');">Eliminar</a>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(productos)}">
+            <td colspan="6">No se encontraron productos.</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>
